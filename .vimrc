@@ -1,3 +1,21 @@
+" List of favourite plugins
+" ctrlp.vim
+" delimitMate
+" ftplugin
+" gundo
+" indentLine
+" jedi-vim
+" nerdtree
+" python-mode
+" supertab
+" syntastic
+" tabline.vim
+" vim-airline
+" vim-easymotion
+" vim-fugitive
+" vim-nerdtree-tabs
+" vim-tmux-navigator
+
 :colors monokai 
 set background=dark
 
