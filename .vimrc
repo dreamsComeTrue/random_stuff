@@ -5,17 +5,29 @@ set background=dark
 execute pathogen#infect()
 syntax on
 filetype plugin indent on
+" gradle syntax highlighting
+au BufNewFile,BufRead *.gradle set filetype=groovy
 
 autocmd FileType python nnoremap <buffer> <F9> :exec '!python' shellescape(@%, 1)<cr>
 
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() >= 0 && !exists("s:std_in") | NERDTree | endif
 
+let g:nerdtree_tabs_open_on_console_startup = 1
+autocmd BufWinEnter * :NERDTreeTabsOpen
+autocmd BufWinEnter * :NERDTreeMirrorOpen
+
+let NERDTreeShowHidden=1
+
 " Sets how many lines of history VIM has to remember
 set history=700
 
 " Set to auto read when a file is changed from the outside
 set autoread
+
+" Set tabline colors
+:hi TabLineFill ctermfg=DarkGray ctermbg=DarkGreen
+:hi TabLineSel ctermfg=White ctermbg=Black
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
@@ -24,7 +36,6 @@ let g:mapleader = ","
 
 " " Fast saving
 nmap <leader>w :w!<cr>
-
 
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
@@ -97,7 +108,6 @@ set tw=500
 set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
-"
 
 """"""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
@@ -192,3 +202,37 @@ augroup myvimrc
      au!
      au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
 augroup END
+
+augroup PreviewOnBottom
+    autocmd InsertEnter * set splitbelow
+    autocmd InsertLeave * set splitbelow!
+augroup END
+
+
+" Automatically find and select currently opened file in NERDTree.
+let g:nerdtree_tabs_autofind=1
+
+" When switching into a tab, make sure that focus is on the file window, not in the NERDTree window.
+let g:nerdtree_tabs_focus_on_files=1
+
+nnoremap <C-S-tab> :tabprevious<CR>
+nnoremap <C-tab>   :tabnext<CR>
+nnoremap <C-t>     :tabnew<CR>
+inoremap <C-t>     <Esc>:tabnew<CR>
+inoremap <C-S-w>   <Esc>:tabclose<CR>
+
+
+" Go to tab by number
+noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr>
+
+" move tabs to the end for new, single buffers (exclude splits)
+autocmd BufNew * if winnr('$') == 1 | tabmove99 | endif
