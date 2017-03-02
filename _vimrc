@@ -2,10 +2,10 @@ set langmenu=en_US.UTF-8
 language messages en
 
 filetype off
-set rtp+=$USERPROFILE/vimfiles/bundle/vundle/
-call vundle#begin('$USERPROFILE/vimfiles/bundle/')
+set rtp+=$USERPROFILE/.vim/bundle/Vundle.vim/
+call vundle#begin('$USERPROFILE/.vim/bundle/')
 
-Plugin 'scrooloose/syntastic'
+"Plugin 'scrooloose/syntastic'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'Raimondi/delimitMate'
 Plugin 'sjl/gundo.vim'
@@ -20,7 +20,8 @@ Plugin 'qpkorr/vim-bufkill'
 Plugin 'yegappan/mru'
 Plugin 'kshenoy/vim-signature'
 Plugin 'terryma/vim-expand-region'
-Plugin 'jlanzarotta/bufexplorer.vim'
+Plugin 'jlanzarotta/bufexplorer'
+Plugin 'erig0/cscope_dynamic'
 " Plugin 'Valloric/YouCompleteMe'
 
 call vundle#end()  
@@ -46,7 +47,7 @@ set background=dark             " Use colours that work well on a dark backgroun
 set showmode                    " show the current mode
 set clipboard=unnamed           " set clipboard to unnamed to access the system clipboard under windows
 syntax on                       " turn syntax highlighting on by default
-set autochdir
+set noautochdir
 
 set background=dark
 colorscheme dracula
@@ -89,7 +90,7 @@ set wildignore=*.o,*~,*.pyc
 set ruler
 "
 " " Height of the command bar
-set cmdheight=1
+"set cmdheight=1
 "
 " " A buffer becomes hidden when it is abandoned
 set hidden
@@ -134,9 +135,9 @@ set cursorline
 " => Files, backups and undo
 """"""""""""""""""""""""""""""""""""""""""
 " Turn backup on
-set backup
-set wb
-set swapfile
+set nobackup
+set nowb
+set noswapfile
 
 """""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -268,11 +269,11 @@ augroup PreviewOnBottom
     autocmd InsertLeave * set splitbelow!
 augroup END
 
-nnoremap <C-S-tab> :tabprevious<CR>
-nnoremap <C-tab>   :tabnext<CR>
-nnoremap <C-t>     :tabnew<CR>
-inoremap <C-t>     <Esc>:tabnew<CR>
-inoremap <C-S-w>   <Esc>:tabclose<CR>
+"nnoremap <C-S-tab> :tabprevious<CR>
+"nnoremap <C-tab>   :tabnext<CR>
+"nnoremap <C-t>     :tabnew<CR>
+"inoremap <C-t>     <Esc>:tabnew<CR>
+"inoremap <C-S-w>   <Esc>:tabclose<CR>
 
 " Go to buffer by number
 nnoremap <Leader>l :ls<CR>
@@ -314,7 +315,7 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline_section_z = '%3p%% %#__accent_bold#%-2{g:airline_symbols.linenr}%#__accent_bold#[%v,%l/%L]%#__restore__#%#__restore__#' 
 
 cd $USERPROFILE
-set guifont=Source\ Code\ Pro\ Medium:h8:cANSI
+set guifont=Consolas:h12:cANSI
 au GUIEnter * simalt ~s " maximize
 
 nnoremap <left> :vertical resize +5<cr> 
@@ -331,3 +332,13 @@ autocmd! FileType c,cpp,java,php call CSyntaxAfter()
 
 let g:cpp_class_scope_highlight=1
 let g:cpp_experimental_template_highlight=1
+
+au BufRead,BufNewFile *.aga setfiletype cpp
+au BufReadPost *.aga set syntax=cpp
+
+command Bd bp\|bd \#
+
+let g:netrw_liststyle=3
+
+nnoremap <silent> <F12> :silent !cscope -b -R<CR><CR>:cscope reset<CR><CR>
+
