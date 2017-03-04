@@ -52,7 +52,7 @@ set showmode                    " show the current mode
 set clipboard=unnamed           " set clipboard to unnamed to access the system clipboard under windows
 syntax on                       " turn syntax highlighting on by default
 set noautochdir
-set nunmber
+set number
 set history=7000				" Sets how many lines of history VIM has to remember
 set autoread 					" Set to auto read when a file is changed from the outside
 set so=7						" Set 7 lines to the cursor - when moving vertically using j/k
