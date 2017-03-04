@@ -306,4 +306,4 @@ command Delmarks  delmarks! | SignatureRefresh
 au BufRead,BufNewFile *.aga setfiletype cpp
 au BufReadPost *.aga set syntax=cpp
 
-nnoremap <silent> <F12> :silent !cscope -b -R<CR><CR>:cscope reset<CR><CR>
+nnoremap <silent> <F12> :silent !cscope -b -R<CR>:cscope reset<CR><CR>
