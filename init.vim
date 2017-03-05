@@ -249,6 +249,8 @@ let g:ctrlp_map = '<leader>p'
 let g:ctrlp_use_caching=1
 let g:ctrlp_working_path_mode=0
 
+nnoremap <leader>l :CtrlPBookmarkDir<CR>
+
 """"""""""""""""""""""""""
 " => Tabline
 """"""""""""""""""""""""""
