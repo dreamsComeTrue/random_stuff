@@ -9,8 +9,9 @@ set fileencodings=utf-8
 set encoding=utf-8
 
 filetype off
-set rtp+=$USERPROFILE/.vim/bundle/Vundle.vim/
-call vundle#begin('$USERPROFILE/.vim/bundle/')
+set rtp+=$USERPROFILE/vim/vimfiles/bundle/vundle/
+
+call vundle#begin('$USERPROFILE/vim/vimfiles/bundle/')
 
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'Raimondi/delimitMate'
@@ -18,10 +19,7 @@ Plugin 'sjl/gundo.vim'
 Plugin 'Yggdroot/indentLine'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'mkitt/tabline.vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'ervandew/supertab'
 Plugin 'qpkorr/vim-bufkill'
 Plugin 'yegappan/mru'
 Plugin 'kshenoy/vim-signature'
@@ -30,7 +28,6 @@ Plugin 'jlanzarotta/bufexplorer'
 
 call vundle#end()  
 
-set nocompatible              	" be iMproved, required
 filetype plugin indent on     
 
 source $VIMRUNTIME/vimrc_example.vim
@@ -43,16 +40,15 @@ behave mswin
 
 set ai                          " set auto-indenting on for programming
 set showmatch                   " automatically show matching brackets. works like it does in bbedit.
-set vb                          " turn on the "visual bell" - which is much quieter than the "audio blink"
 set ruler                       " show the cursor position all the time
 set backspace=indent,eol,start  " make that backspace key work the way it should
 set nocompatible                " vi compatible is LAME
-set background=dark             " Use colours that work well on a dark background (Console is usually black)
 set showmode                    " show the current mode
 set clipboard=unnamed           " set clipboard to unnamed to access the system clipboard under windows
 syntax on                       " turn syntax highlighting on by default
 set noautochdir
-set number
+set number                      " Line numbers on
+set relativenumber              " Relative numbers on
 set history=7000				" Sets how many lines of history VIM has to remember
 set autoread 					" Set to auto read when a file is changed from the outside
 set so=7						" Set 7 lines to the cursor - when moving vertically using j/k
@@ -72,7 +68,7 @@ set lazyredraw					" Don't redraw while executing macros (good performance confi
 set magic						" For regular expressions turn magic on
 set showmatch					" Show matching brackets when text indicator is over them
 set cursorline					" Highlight current line
-set novisualbell
+set novisualbell                " turn on the "visual bell" - which is much quieter than the "audio blink"
 set viminfo^=%					" Remember info about open buffers on close
 
 nnoremap <esc> :noh<return><esc>
@@ -89,11 +85,12 @@ let g:mapleader = ","						" like <leader>w saves the current file
 nnoremap <leader>w :w!<cr>					" Fast saving
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>	" Switch CWD to the directory of the open buffer
 nnoremap <leader>k :Explore<cr>
+inoremap <C-space> <C-n>
 
 """"""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
 """"""""""""""""""""""""""""""""""""""""""
-" Turn backup on
+
 set nobackup
 set nowb
 set noswapfile
@@ -106,10 +103,10 @@ set expandtab				" Use spaces instead of tabs
 set smarttab				" Be smart when using tabs ;)
 set shiftwidth=4			" 1 tab == 4 spaces
 set tabstop=4
-set lbr						" Linebreak on 500 characters
+set linebreak				" Linebreak on 500 characters
 set tw=500
-set ai 						" Auto indent
-set si 						" Smart indent
+set autoindent  			" Auto indent
+set smartindent				" Smart indent
 set wrap 					" Wrap lines
 
 """"""""""""""""""""""""""""""""""""""""""
@@ -118,8 +115,8 @@ set wrap 					" Wrap lines
 
 noremap j gj						" Treat long lines as break lines (useful when moving around in them)
 noremap k gk
-noremap <space> /					" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-inoremap <c-space> ?
+"noremap <space> /					" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
+"inoremap <c-space> ?
 inoremap jj <Esc>
 inoremap <M-i> <Esc>
 inoremap <Esc> <Nop>
@@ -206,11 +203,14 @@ let g:airline_section_z = '%3p%% %#__accent_bold#%-2{g:airline_symbols.linenr}%#
 " => GUI
 """"""""""""""""""""""""""
 
-set background=dark
+set background=dark             " Use colours that work well on a dark background (Console is usually black)
 colorscheme night
 
-hi colorcolumn guibg=#2d2d2d ctermbg=246
+hi colorcolumn guibg=#404060 ctermbg=246
 let &colorcolumn="100,".join(range(120,999),",")
+
+hi Pmenu gui=bold guibg=#404070 guifg=yellow
+hi CursorLine guibg=#404090
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -243,21 +243,13 @@ augroup END
 " => Ctrl-P
 """"""""""""""""""""""""""
 
-" Use <leader>t to open ctrlp
+" Use <leader>p to open ctrlp
 let g:ctrlp_map = '<leader>p'
 " " disable caching
 let g:ctrlp_use_caching=1
 let g:ctrlp_working_path_mode=0
 
 nnoremap <leader>l :CtrlPBookmarkDir<CR>
-
-""""""""""""""""""""""""""
-" => Tabline
-""""""""""""""""""""""""""
-
-" Set tabline colors
-:hi TabLineFill ctermfg=DarkGray ctermbg=DarkGreen
-:hi TabLineSel ctermfg=White ctermbg=Black
 
 """"""""""""""""""""""""""
 " => GUndo
@@ -282,12 +274,6 @@ let g:netrw_liststyle=3
 let delimitMate_expand_cr = 1
 
 """"""""""""""""""""""""""
-" => SuperTab
-""""""""""""""""""""""""""
-
-let g:SuperTabDefaultCompletionType = "<c-n>"
-
-""""""""""""""""""""""""""
 " => CppEnhanced
 """"""""""""""""""""""""""
 
@@ -302,6 +288,12 @@ autocmd! FileType c,cpp,java,php call CSyntaxAfter()
 command Delmarks  delmarks! | SignatureRefresh  
 
 """"""""""""""""""""""""""
+" => IndentLine
+""""""""""""""""""""""""""
+
+let g:indentLine_color_gui = '#555555'
+
+""""""""""""""""""""""""""
 " => Various
 """"""""""""""""""""""""""
 
@@ -309,3 +301,5 @@ au BufRead,BufNewFile *.aga setfiletype cpp
 au BufReadPost *.aga set syntax=cpp
 
 nnoremap <silent> <F12> :silent !cscope -b -R<CR>:cscope reset<CR><CR>
+map @@x !%xmllint --format --recover -^M
+
