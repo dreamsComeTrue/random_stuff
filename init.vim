@@ -9,9 +9,9 @@ set fileencodings=utf-8
 set encoding=utf-8
 
 filetype off
-set rtp+=$USERPROFILE/vim/vimfiles/bundle/vundle/
+set rtp+=$USERPROFILE/.vim/bundle/Vundle.vim/
 
-call vundle#begin('$USERPROFILE/vim/vimfiles/bundle/')
+call vundle#begin('$USERPROFILE/.vim/bundle/')
 
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'Raimondi/delimitMate'
@@ -21,10 +21,10 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'vim-airline/vim-airline'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'qpkorr/vim-bufkill'
-Plugin 'yegappan/mru'
 Plugin 'kshenoy/vim-signature'
 Plugin 'terryma/vim-expand-region'
 Plugin 'jlanzarotta/bufexplorer'
+Plugin 'mileszs/ack.vim'
 
 call vundle#end()  
 
@@ -40,11 +40,9 @@ behave mswin
 
 set ai                          " set auto-indenting on for programming
 set showmatch                   " automatically show matching brackets. works like it does in bbedit.
-set ruler                       " show the cursor position all the time
 set backspace=indent,eol,start  " make that backspace key work the way it should
 set nocompatible                " vi compatible is LAME
 set showmode                    " show the current mode
-set clipboard=unnamed           " set clipboard to unnamed to access the system clipboard under windows
 syntax on                       " turn syntax highlighting on by default
 set noautochdir
 set number                      " Line numbers on
@@ -53,7 +51,8 @@ set history=7000				" Sets how many lines of history VIM has to remember
 set autoread 					" Set to auto read when a file is changed from the outside
 set so=7						" Set 7 lines to the cursor - when moving vertically using j/k
 set wildmenu					" Turn on the WiLd menu
-set wildignore=*.o,*~,*.pyc		" Ignore compiled files
+" Ignore compiled files
+set wildignore=*.o,*.obj,*.a,*.lib,*.dll,*~,*.pyc,*.zip,*.exe		
 set wildignore+=*/build/**		" Ignore these directories
 set ruler						" Always show current position
 set cmdheight=1 				" Height of the command bar
@@ -130,6 +129,8 @@ noremap <C-l> <C-W>l
 
 " Close the current buffer
 noremap <leader>bd :bdelete<cr>
+noremap <leader>d :bdelete<cr>
+
 noremap <leader>bw :BW<cr>
 
 " Close all the buffers
@@ -248,8 +249,11 @@ let g:ctrlp_map = '<leader>p'
 " " disable caching
 let g:ctrlp_use_caching=1
 let g:ctrlp_working_path_mode=0
+let g:ctrlp_follow_symlinks=2
 
 nnoremap <leader>l :CtrlPBookmarkDir<CR>
+
+command MRU CtrlPMRUFiles
 
 """"""""""""""""""""""""""
 " => GUndo
@@ -288,6 +292,14 @@ autocmd! FileType c,cpp,java,php call CSyntaxAfter()
 command Delmarks  delmarks! | SignatureRefresh  
 
 """"""""""""""""""""""""""
+" => Ack
+""""""""""""""""""""""""""
+
+noremap <leader>a :Ack! <cword><cr>
+noremap <leader>c :cclose<cr>
+noremap <leader>o :copen<cr>
+
+""""""""""""""""""""""""""
 " => IndentLine
 """"""""""""""""""""""""""
 
@@ -302,4 +314,7 @@ au BufReadPost *.aga set syntax=cpp
 
 nnoremap <silent> <F12> :silent !cscope -b -R<CR>:cscope reset<CR><CR>
 map @@x !%xmllint --format --recover -^M
+
+" set path+=*/**
+" autocmd VimEnter * cscope add cscope.out
 
