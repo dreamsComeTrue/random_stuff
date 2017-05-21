@@ -83,6 +83,7 @@ let g:mapleader = ","						" like <leader>w saves the current file
 nnoremap <leader>w :w!<cr>					" Fast saving
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>	" Switch CWD to the directory of the open buffer
 nnoremap <leader>k :Explore<cr>
+nnoremap <leader>r :%s/\<<C-r><C-w>\>/
 inoremap <C-space> <C-n>
 
 """"""""""""""""""""""""""""""""""""""""""
