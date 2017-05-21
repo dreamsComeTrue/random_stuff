@@ -2,16 +2,13 @@
 " => General sttings
 """""""""""""""""""""""""""""""""""""""""
 
-set langmenu=en_US.UTF-8
-language messages en
-
 set fileencodings=utf-8
 set encoding=utf-8
 
 filetype off
-set rtp+=$USERPROFILE/.vim/bundle/Vundle.vim/
+set rtp+=~/.config/nvim/bundle/Vundle.vim/
 
-call vundle#begin('$USERPROFILE/.vim/bundle/')
+call vundle#begin('~/.config/nvim/bundle/')
 
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'Raimondi/delimitMate'
@@ -38,7 +35,7 @@ behave mswin
 " => Editor customization
 """""""""""""""""""""""""""""""""""""""""
 
-set ai                          " set auto-indenting on for programming
+set autoindent                  " set auto-indenting on for programming
 set showmatch                   " automatically show matching brackets. works like it does in bbedit.
 set backspace=indent,eol,start  " make that backspace key work the way it should
 set nocompatible                " vi compatible is LAME
@@ -51,9 +48,6 @@ set history=7000				" Sets how many lines of history VIM has to remember
 set autoread 					" Set to auto read when a file is changed from the outside
 set so=7						" Set 7 lines to the cursor - when moving vertically using j/k
 set wildmenu					" Turn on the WiLd menu
-" Ignore compiled files
-set wildignore=*.o,*.obj,*.a,*.lib,*.dll,*~,*.pyc,*.zip,*.exe		
-set wildignore+=*/build/**		" Ignore these directories
 set ruler						" Always show current position
 set cmdheight=1 				" Height of the command bar
 set hidden						" A buffer becomes hidden when it is abandoned
@@ -69,6 +63,11 @@ set showmatch					" Show matching brackets when text indicator is over them
 set cursorline					" Highlight current line
 set novisualbell                " turn on the "visual bell" - which is much quieter than the "audio blink"
 set viminfo^=%					" Remember info about open buffers on close
+
+" Ignore compiled files
+set wildignore=*.o,*.obj,*.a,*.lib,*.dll,*~,*.pyc,*.zip,*.exe		
+" Ignore these directories
+set wildignore+=*/build/**		
 
 nnoremap <esc> :noh<return><esc>
 
@@ -112,6 +111,13 @@ set wrap 					" Wrap lines
 " => Moving around, tabs, windows and buffers
 """"""""""""""""""""""""""""""""""""""""""
 
+" Move cursor in Insert Mode, not pretty :)
+inoremap <M-j> <down>
+inoremap <M-k> <up>
+inoremap <M-h> <left>
+inoremap <M-l> <right>
+
+nnoremap ; :
 noremap j gj						" Treat long lines as break lines (useful when moving around in them)
 noremap k gk
 "noremap <space> /					" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
@@ -128,7 +134,6 @@ noremap <C-h> <C-W>h
 noremap <C-l> <C-W>l
 
 " Close the current buffer
-noremap <leader>bd :bdelete<cr>
 noremap <leader>d :bdelete<cr>
 
 noremap <leader>bw :BW<cr>
@@ -142,7 +147,6 @@ command Bd bp\|bd \#
 noremap <leader>tn :tabnew<cr>
 noremap <leader>to :tabonly<cr>
 noremap <leader>tc :tabclose<cr>
-noremap <leader>tm :tabmove
 
 "nnoremap <C-S-tab> :tabprevious<CR>
 "nnoremap <C-tab>   :tabnext<CR>
@@ -177,10 +181,7 @@ try
 catch
 endtry
 
-" move tabs to the end for new, single buffers (exclude splits)
-autocmd BufNew * if winnr('$') == 1 | tabmove99 | endif
-
-nnoremap <F2> :buffers<CR>:buffer<Space>
+noremap <F2> :buffers<CR>:buffer<Space>
 
 """"""""""""""""""""""""""
 " => Status line
@@ -198,13 +199,13 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 
 " Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
-let g:airline_section_z = '%3p%% %#__accent_bold#%-2{g:airline_symbols.linenr}%#__accent_bold#[%v,%l/%L]%#__restore__#%#__restore__#' 
+let g:airline_section_z = '%3p%% %#__accent_bold#%-2{g:airline_symbols.linenr}%#__accent_bold#[%v,%l/%L]%#__restore__#%#__restore__#'
 
 """"""""""""""""""""""""""
 " => GUI
 """"""""""""""""""""""""""
 
-set background=dark             " Use colours that work well on a dark background (Console is usually black)
+set background=dark
 colorscheme night
 
 hi colorcolumn guibg=#404060 ctermbg=246
@@ -212,20 +213,6 @@ let &colorcolumn="100,".join(range(120,999),",")
 
 hi Pmenu gui=bold guibg=#404070 guifg=yellow
 hi CursorLine guibg=#404090
-
-" Set extra options when running in GUI mode
-if has("gui_running")
-    set guioptions-=T
-    set guioptions-=e
-    set t_Co=256
-    set guitablabel=%M\ %t
-endif
-
-"set guioptions-=m  "menu bar
-set guioptions-=L  "remove left-hand scroll bar
-
-set guifont=Consolas:h12:cANSI
-au GUIEnter * simalt ~s " maximize
 
 nnoremap <left> :vertical resize +5<cr> 
 nnoremap <right> :vertical resize -5<cr>
@@ -244,16 +231,14 @@ augroup END
 " => Ctrl-P
 """"""""""""""""""""""""""
 
-" Use <leader>p to open ctrlp
 let g:ctrlp_map = '<leader>p'
-" " disable caching
 let g:ctrlp_use_caching=1
 let g:ctrlp_working_path_mode=0
 let g:ctrlp_follow_symlinks=2
 
 nnoremap <leader>l :CtrlPBookmarkDir<CR>
 
-command MRU CtrlPMRUFiles
+nnoremap <leader><F2> :CtrlPMRUFiles<CR>
 
 """"""""""""""""""""""""""
 " => GUndo
@@ -261,8 +246,8 @@ command MRU CtrlPMRUFiles
 
 nnoremap <F5> :GundoToggle<CR>
 
-" let g:gundo_width = 60
-" let g:gundo_preview_height = 40
+let g:gundo_width = 60
+let g:gundo_preview_height = 40
 let g:gundo_right=1
 
 """"""""""""""""""""""""""
@@ -317,4 +302,3 @@ map @@x !%xmllint --format --recover -^M
 
 " set path+=*/**
 " autocmd VimEnter * cscope add cscope.out
-
