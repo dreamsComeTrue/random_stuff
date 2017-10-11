@@ -8,20 +8,21 @@ set encoding=utf-8
 filetype off
 set rtp+=~/.config/nvim/bundle/Vundle.vim/
 
-call vundle#begin('~/.config/nvim/bundle/')
 
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'Raimondi/delimitMate'
 Plugin 'sjl/gundo.vim'
 Plugin 'Yggdroot/indentLine'
-Plugin 'easymotion/vim-easymotion'
 Plugin 'vim-airline/vim-airline'
 Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'qpkorr/vim-bufkill'
 Plugin 'kshenoy/vim-signature'
-Plugin 'terryma/vim-expand-region'
 Plugin 'jlanzarotta/bufexplorer'
 Plugin 'mileszs/ack.vim'
+Plugin 'skywind3000/asyncrun.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'Valloric/YouCompleteMe'
 
 call vundle#end()  
 
@@ -35,12 +36,12 @@ behave mswin
 " => Editor customization
 """""""""""""""""""""""""""""""""""""""""
 
+syntax on                       " turn syntax highlighting on by default
 set autoindent                  " set auto-indenting on for programming
 set showmatch                   " automatically show matching brackets. works like it does in bbedit.
 set backspace=indent,eol,start  " make that backspace key work the way it should
 set nocompatible                " vi compatible is LAME
 set showmode                    " show the current mode
-syntax on                       " turn syntax highlighting on by default
 set noautochdir
 set number                      " Line numbers on
 set relativenumber              " Relative numbers on
@@ -85,6 +86,7 @@ nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>	" Switch CWD to the directory of the o
 nnoremap <leader>k :Explore<cr>
 nnoremap <leader>r :%s/\<<C-r><C-w>\>/
 inoremap <C-space> <C-n>
+noremap <silent> <leader><cr> :noh<cr>	    " Disable highlight when <leader><cr> is pressed
 
 """"""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -119,14 +121,12 @@ inoremap <M-h> <left>
 inoremap <M-l> <right>
 
 nnoremap ; :
-noremap j gj						" Treat long lines as break lines (useful when moving around in them)
+" Treat long lines as break lines (useful when moving around in them)
+noremap j gj						
 noremap k gk
-"noremap <space> /					" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-"inoremap <c-space> ?
 inoremap jj <Esc>
 inoremap <M-i> <Esc>
 inoremap <Esc> <Nop>
-noremap <silent> <leader><cr> :noh<cr>	" Disable highlight when <leader><cr> is pressed
 
 " Smart way to move between windows
 noremap <C-j> <C-W>j
@@ -135,18 +135,20 @@ noremap <C-h> <C-W>h
 noremap <C-l> <C-W>l
 
 " Close the current buffer
-noremap <leader>d :bdelete<cr>
+noremap <leader>D :bdelete<cr>
+noremap <leader>d :BD<cr>
 
 noremap <leader>bw :BW<cr>
 
 " Close all the buffers
 noremap <leader>ba :1,1000 bd!<cr>
 
-command Bd bp\|bd \#
+!command Bd bp\|bd \#
 
 " Useful mappings for managing tabs
 noremap <leader>tn :tabnew<cr>
 noremap <leader>to :tabonly<cr>
+noremap <leader>te :tabedit %<cr>
 noremap <leader>tc :tabclose<cr>
 
 "nnoremap <C-S-tab> :tabprevious<CR>
@@ -159,6 +161,8 @@ noremap <leader>tc :tabclose<cr>
 nnoremap <Leader>l :ls<CR>
 nnoremap <Leader>b :bp<CR>
 nnoremap <Leader>f :bn<CR>
+nnoremap <Leader>< :bp<CR>
+nnoremap <Leader>. :bn<CR>
 nnoremap <Leader>g :e#<CR>
 nnoremap <Leader>1 :1b<CR>
 nnoremap <Leader>2 :2b<CR>
@@ -187,7 +191,7 @@ noremap <F2> :buffers<CR>:buffer<Space>
 """"""""""""""""""""""""""
 " => Status line
 """"""""""""""""""""""""""
-	
+
 set laststatus=2		" Always show the status line
 
 " Show EOL type and last modified timestamp, right after the filename
@@ -212,8 +216,13 @@ colorscheme night
 hi colorcolumn guibg=#404060 ctermbg=246
 let &colorcolumn="100,".join(range(120,999),",")
 
-hi Pmenu gui=bold guibg=#404070 guifg=yellow
+hi Pmenu gui=bold guibg=#404090 guifg=yellow
 hi CursorLine guibg=#404090
+hi Search guibg=blue 
+hi IncSearch guibg=blue  
+
+" Highlight all occurences for word on cursor
+autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
 
 nnoremap <left> :vertical resize +5<cr> 
 nnoremap <right> :vertical resize -5<cr>
@@ -228,6 +237,10 @@ augroup PreviewOnBottom
     autocmd InsertLeave * set splitbelow!
 augroup END
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""  Plugins
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 """"""""""""""""""""""""""
 " => Ctrl-P
 """"""""""""""""""""""""""
@@ -238,6 +251,7 @@ let g:ctrlp_working_path_mode=0
 let g:ctrlp_follow_symlinks=2
 
 nnoremap <leader>l :CtrlPBookmarkDir<CR>
+nnoremap <leader>P :CtrlPClearAllCaches<CR> :CtrlP<CR>
 
 nnoremap <leader><F2> :CtrlPMRUFiles<CR>
 
@@ -255,7 +269,7 @@ let g:gundo_right=1
 " => Netrw
 """"""""""""""""""""""""""
 
-let g:netrw_liststyle=3
+let g:netrw_liststyle=2
 
 """"""""""""""""""""""""""
 " => DelimitMate
@@ -269,19 +283,21 @@ let delimitMate_expand_cr = 1
 
 let g:cpp_class_scope_highlight = 1
 let g:cpp_experimental_template_highlight = 1
-autocmd! FileType c,cpp,java,php call CSyntaxAfter()
 
 """"""""""""""""""""""""""
 " => Delmarks
 """"""""""""""""""""""""""
 
-command Delmarks  delmarks! | SignatureRefresh  
+!command Delmarks  delmarks! | SignatureRefresh  
 
 """"""""""""""""""""""""""
 " => Ack
 """"""""""""""""""""""""""
 
-noremap <leader>a :Ack! <cword><cr>
+noremap <leader>a :Ack! --smart-case --ignore-dir={.git} --ignore-file=match:.obj --ignore-file=match:.class <cword><cr>
+noremap <leader>A :Ack! --smart-case --ignore-dir={.git} --ignore-file=match:.obj --ignore-file=match:.class 
+"noremap <leader>a :Ack! --smart-case --cc --cpp --csharp --cmake --html --java --js --json --python --sql --xml --ignore-dir={.git} --ignore-file=match:.obj --ignore-file=match:.class <cword><cr>
+"noremap <leader>A :Ack! --smart-case --cc --cpp --csharp --cmake --html --java --js --json --python --sql --xml --ignore-dir={.git} --ignore-file=match:.obj --ignore-file=match:.class 
 noremap <leader>c :cclose<cr>
 noremap <leader>o :copen<cr>
 
@@ -290,16 +306,43 @@ noremap <leader>o :copen<cr>
 """"""""""""""""""""""""""
 
 let g:indentLine_color_gui = '#555555'
+let g:indent_guides_enable_on_vim_startup = 1
+
+""""""""""""""""""""""""""
+" => NERDTree
+""""""""""""""""""""""""""
+
+noremap <leader>j :NERDTreeToggle<CR>
 
 """"""""""""""""""""""""""
 " => Various
 """"""""""""""""""""""""""
 
-au BufRead,BufNewFile *.aga setfiletype cpp
-au BufReadPost *.aga set syntax=cpp
-
-nnoremap <silent> <F12> :silent !cscope -b -R<CR>:cscope reset<CR><CR>
 map @@x !%xmllint --format --recover -^M
 
-" set path+=*/**
+set path+=*/**
+set path+=../**
+
 " autocmd VimEnter * cscope add cscope.out
+
+"   Code completion using cscope
+function! CodeCompletion()
+    :silent !find . -iname '*.c' -o -iname '*.cpp' -o -iname '*.h' -o -iname '*.hpp' > cscope.files
+    :silent !cscope -b -R
+    :cscope reset
+endfunction
+
+nnoremap <silent> <F12> :call CodeCompletion()<CR><CR>
+
+"   Compilation
+function! CompileAndRun ()
+    :!make --directory=Binaries/ -j4
+    :cd ./Binaries/
+    :!./RobotTale
+    :cd ..
+endfunction
+
+nnoremap <silent> <F8> :call CompileAndRun()<CR>
+
+:cd ~/RobotGame
+
