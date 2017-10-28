@@ -6,9 +6,11 @@ set fileencodings=utf-8
 set encoding=utf-8
 
 filetype off
-set rtp+=~/.config/nvim/bundle/Vundle.vim/
+set rtp+=~/.vim/bundle/Vundle.vim
 
+call vundle#begin()  
 
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'Raimondi/delimitMate'
 Plugin 'sjl/gundo.vim'
@@ -23,7 +25,7 @@ Plugin 'mileszs/ack.vim'
 Plugin 'skywind3000/asyncrun.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Valloric/YouCompleteMe'
-
+    
 call vundle#end()  
 
 filetype plugin indent on     
@@ -143,8 +145,6 @@ noremap <leader>bw :BW<cr>
 " Close all the buffers
 noremap <leader>ba :1,1000 bd!<cr>
 
-!command Bd bp\|bd \#
-
 " Useful mappings for managing tabs
 noremap <leader>tn :tabnew<cr>
 noremap <leader>to :tabonly<cr>
@@ -187,6 +187,8 @@ catch
 endtry
 
 noremap <F2> :buffers<CR>:buffer<Space>
+
+
 
 """"""""""""""""""""""""""
 " => Status line
@@ -285,12 +287,6 @@ let g:cpp_class_scope_highlight = 1
 let g:cpp_experimental_template_highlight = 1
 
 """"""""""""""""""""""""""
-" => Delmarks
-""""""""""""""""""""""""""
-
-!command Delmarks  delmarks! | SignatureRefresh  
-
-""""""""""""""""""""""""""
 " => Ack
 """"""""""""""""""""""""""
 
@@ -345,4 +341,3 @@ endfunction
 nnoremap <silent> <F8> :call CompileAndRun()<CR>
 
 :cd ~/RobotGame
-
