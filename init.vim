@@ -11,20 +11,19 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()  
 
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'Raimondi/delimitMate'
 Plugin 'sjl/gundo.vim'
-Plugin 'Yggdroot/indentLine'
-Plugin 'vim-airline/vim-airline'
-Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'qpkorr/vim-bufkill'
-Plugin 'kshenoy/vim-signature'
-Plugin 'jlanzarotta/bufexplorer'
 Plugin 'mileszs/ack.vim'
-Plugin 'skywind3000/asyncrun.vim'
+Plugin 'qpkorr/vim-bufkill'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'Yggdroot/indentLine'
+Plugin 'Raimondi/delimitMate'
+Plugin 'kshenoy/vim-signature'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'jlanzarotta/bufexplorer'
+Plugin 'vim-airline/vim-airline'
+Plugin 'skywind3000/asyncrun.vim'
+Plugin 'octol/vim-cpp-enhanced-highlight'
     
 call vundle#end()  
 
@@ -41,7 +40,6 @@ behave mswin
 syntax on                       " turn syntax highlighting on by default
 set autoindent                  " set auto-indenting on for programming
 set showmatch                   " automatically show matching brackets. works like it does in bbedit.
-set backspace=indent,eol,start  " make that backspace key work the way it should
 set nocompatible                " vi compatible is LAME
 set showmode                    " show the current mode
 set noautochdir
@@ -122,6 +120,11 @@ inoremap <M-k> <up>
 inoremap <M-h> <left>
 inoremap <M-l> <right>
 
+" New lines on Enter key
+nmap <S-Enter> Ojj
+nmap <CR> ojj
+set backspace=2 " make backspace work like most other programs
+
 nnoremap ; :
 " Treat long lines as break lines (useful when moving around in them)
 noremap j gj						
@@ -187,8 +190,6 @@ catch
 endtry
 
 noremap <F2> :buffers<CR>:buffer<Space>
-
-
 
 """"""""""""""""""""""""""
 " => Status line
@@ -285,6 +286,9 @@ let delimitMate_expand_cr = 1
 
 let g:cpp_class_scope_highlight = 1
 let g:cpp_experimental_template_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_concepts_highlight = 1
 
 """"""""""""""""""""""""""
 " => Ack
@@ -302,13 +306,18 @@ noremap <leader>o :copen<cr>
 """"""""""""""""""""""""""
 
 let g:indentLine_color_gui = '#555555'
-let g:indent_guides_enable_on_vim_startup = 1
 
 """"""""""""""""""""""""""
 " => NERDTree
 """"""""""""""""""""""""""
 
 noremap <leader>j :NERDTreeToggle<CR>
+
+""""""""""""""""""""""""""
+" => YouCompleTme
+""""""""""""""""""""""""""
+
+noremap <C-g> :YcmCompleter GoTo<CR>
 
 """"""""""""""""""""""""""
 " => Various
@@ -334,10 +343,10 @@ nnoremap <silent> <F12> :call CodeCompletion()<CR><CR>
 function! CompileAndRun ()
     :!make --directory=Binaries/ -j4
     :cd ./Binaries/
-    :!./RobotTale
+    :!./RobotTales
     :cd ..
 endfunction
 
 nnoremap <silent> <F8> :call CompileAndRun()<CR>
 
-:cd ~/RobotGame
+:cd ~/RobotTales
