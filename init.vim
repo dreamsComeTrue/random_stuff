@@ -8,29 +8,36 @@ set encoding=utf-8
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 
+set directory=~/.vim/temp//
+set backupdir=~/.vim/temp//
+set undodir=~/.vim/temp//
+
 call vundle#begin()  
 
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'sjl/gundo.vim'
-Plugin 'mileszs/ack.vim'
 Plugin 'qpkorr/vim-bufkill'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Yggdroot/indentLine'
 Plugin 'Raimondi/delimitMate'
 Plugin 'kshenoy/vim-signature'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'jlanzarotta/bufexplorer'
 Plugin 'vim-airline/vim-airline'
 Plugin 'skywind3000/asyncrun.vim'
+Plugin 'scrooloose/nerdcommenter'
 Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'jremmen/vim-ripgrep'
+Plugin 'KabbAmine/zeavim.vim'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-session'
     
 call vundle#end()  
 
 filetype plugin indent on     
 
-source $VIMRUNTIME/vimrc_example.vim
-source $VIMRUNTIME/mswin.vim
+"source $VIMRUNTIME/vimrc_example.vim
+"source $VIMRUNTIME/mswin.vim
 behave mswin
 
 """""""""""""""""""""""""""""""""""""""""
@@ -84,7 +91,7 @@ let g:mapleader = ","						" like <leader>w saves the current file
 nnoremap <leader>w :w!<cr>					" Fast saving
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>	" Switch CWD to the directory of the open buffer
 nnoremap <leader>k :Explore<cr>
-nnoremap <leader>r :%s/\<<C-r><C-w>\>/
+nnoremap <leader>r :%s/\<<C-r><C-w>\>//gc<left><left><left>
 inoremap <C-space> <C-n>
 noremap <silent> <leader><cr> :noh<cr>	    " Disable highlight when <leader><cr> is pressed
 
@@ -92,9 +99,9 @@ noremap <silent> <leader><cr> :noh<cr>	    " Disable highlight when <leader><cr>
 " => Files, backups and undo
 """"""""""""""""""""""""""""""""""""""""""
 
-set nobackup
-set nowb
-set noswapfile
+set backup
+set wb
+set swapfile
 
 """""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -121,8 +128,8 @@ inoremap <M-h> <left>
 inoremap <M-l> <right>
 
 " New lines on Enter key
-nmap <S-Enter> Ojj
-nmap <CR> ojj
+nmap <C-S-CR> Ojj
+nmap <S-CR> ojj
 set backspace=2 " make backspace work like most other programs
 
 nnoremap ; :
@@ -154,17 +161,20 @@ noremap <leader>to :tabonly<cr>
 noremap <leader>te :tabedit %<cr>
 noremap <leader>tc :tabclose<cr>
 
-"nnoremap <C-S-tab> :tabprevious<CR>
-"nnoremap <C-tab>   :tabnext<CR>
+nnoremap <C-S-tab> :tabprevious<CR>
+nnoremap <C-tab>   :tabnext<CR>
 "nnoremap <C-t>     :tabnew<CR>
 "inoremap <C-t>     <Esc>:tabnew<CR>
 "inoremap <C-S-w>   <Esc>:tabclose<CR>
+
+" Terminal exit
+tnoremap jj <C-\><C-n>
 
 " Go to buffer by number
 nnoremap <Leader>l :ls<CR>
 nnoremap <Leader>b :bp<CR>
 nnoremap <Leader>f :bn<CR>
-nnoremap <Leader>< :bp<CR>
+nnoremap <Leader>, :bp<CR>
 nnoremap <Leader>. :bn<CR>
 nnoremap <Leader>g :e#<CR>
 nnoremap <Leader>1 :1b<CR>
@@ -216,11 +226,13 @@ let g:airline_section_z = '%3p%% %#__accent_bold#%-2{g:airline_symbols.linenr}%#
 set background=dark
 colorscheme night
 
-hi colorcolumn guibg=#404060 ctermbg=246
+hi colorcolumn guibg=#353545 ctermbg=246
+hi SignColumn guibg=#353545 
+hi SignatureMarkText guibg=#353545 guifg=yellow
 let &colorcolumn="100,".join(range(120,999),",")
 
 hi Pmenu gui=bold guibg=#404090 guifg=yellow
-hi CursorLine guibg=#404090
+hi CursorLine guibg=#404080
 hi Search guibg=blue 
 hi IncSearch guibg=blue  
 
@@ -294,10 +306,8 @@ let g:cpp_concepts_highlight = 1
 " => Ack
 """"""""""""""""""""""""""
 
-noremap <leader>a :Ack! --smart-case --ignore-dir={.git} --ignore-file=match:.obj --ignore-file=match:.class <cword><cr>
-noremap <leader>A :Ack! --smart-case --ignore-dir={.git} --ignore-file=match:.obj --ignore-file=match:.class 
-"noremap <leader>a :Ack! --smart-case --cc --cpp --csharp --cmake --html --java --js --json --python --sql --xml --ignore-dir={.git} --ignore-file=match:.obj --ignore-file=match:.class <cword><cr>
-"noremap <leader>A :Ack! --smart-case --cc --cpp --csharp --cmake --html --java --js --json --python --sql --xml --ignore-dir={.git} --ignore-file=match:.obj --ignore-file=match:.class 
+noremap <leader>a :Rg <cword><cr>
+noremap <leader>A :Rg 
 noremap <leader>c :cclose<cr>
 noremap <leader>o :copen<cr>
 
@@ -314,19 +324,56 @@ let g:indentLine_color_gui = '#555555'
 noremap <leader>j :NERDTreeToggle<CR>
 
 """"""""""""""""""""""""""
-" => YouCompleTme
+" => YouCompleteMe
 """"""""""""""""""""""""""
 
-noremap <C-g> :YcmCompleter GoTo<CR>
+set completeopt-=preview " Not show scratch buffer with suggestions
+let g:ycm_confirm_extra_conf = 1
+
+""""""""""""""""""""""""""
+" => vim-session
+""""""""""""""""""""""""""
+
+let g:session_autosave = 'yes'
 
 """"""""""""""""""""""""""
 " => Various
 """"""""""""""""""""""""""
 
-map @@x !%xmllint --format --recover -^M
+ " C++ format using clang-format
+noremap <C-k> :silent pyfile /usr/share/clang/clang-format.py<CR>
 
-set path+=*/**
-set path+=../**
+"   Switch between header an source file
+function! HeaderToggle() " bang for overwrite when saving vimrc
+let file_path = expand("%")
+let file_name = expand("%<")
+let extension = split(file_path, '\.')[-1] " '\.' is how you really split on dot
+let err_msg = "There is no file "
+
+if extension == "cpp"
+    let next_file = join([file_name, ".h"], "")
+
+    if filereadable(next_file)
+    :e %<.h
+    else
+        echo join([err_msg, next_file], "")
+    endif
+elseif extension == "h"
+    let next_file = join([file_name, ".cpp"], "")
+
+    if filereadable(next_file)
+        :e %<.cpp
+    else
+        echo join([err_msg, next_file], "")
+    endif
+endif
+endfunction
+
+noremap <leader>e :call HeaderToggle()<CR>
+
+""""""""""""""""""""""""""""""
+" => CodeCompletion - cscope
+""""""""""""""""""""""""""""""
 
 " autocmd VimEnter * cscope add cscope.out
 
@@ -339,14 +386,29 @@ endfunction
 
 nnoremap <silent> <F12> :call CodeCompletion()<CR><CR>
 
-"   Compilation
+""""""""""""""""""""""""""""""
+" => Compilation
+""""""""""""""""""""""""""""""
+
 function! CompileAndRun ()
-    :!make --directory=Binaries/ -j4
-    :cd ./Binaries/
+    :!ninja -C /home/squall/RobotTales/Binaries/Linux/Out -j8
+    :cd /home/squall/RobotTales/Binaries/Linux
     :!./RobotTales
-    :cd ..
+    :cd ../..
 endfunction
 
 nnoremap <silent> <F8> :call CompileAndRun()<CR>
 
-:cd ~/RobotTales
+""""""""""""""""""""""""""""""
+" => Setting paths
+""""""""""""""""""""""""""""""
+
+noremap <C-'> :registers<CR>
+
+map @@x !%xmllint --format --recover -^M
+
+set path+=*/**
+set path+=../**
+
+:cd /home/squall/RobotTales
+
