@@ -6,49 +6,47 @@ set fileencodings=utf-8
 set encoding=utf-8
 
 filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=C:/Users/B0634624/Neovim/vimfiles/bundle/vundle/
 
-set directory=~/.vim/temp//
-set backupdir=~/.vim/temp//
-set undodir=~/.vim/temp//
+call vundle#begin('C:/Users/B0634624/Neovim/vimfiles/bundle/')
 
-call vundle#begin()  
-
-Plugin 'VundleVim/Vundle.vim'
 Plugin 'sjl/gundo.vim'
-Plugin 'qpkorr/vim-bufkill'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'scrooloose/nerdtree'
 Plugin 'Yggdroot/indentLine'
 Plugin 'Raimondi/delimitMate'
-Plugin 'kshenoy/vim-signature'
 Plugin 'vim-airline/vim-airline'
-Plugin 'skywind3000/asyncrun.vim'
-Plugin 'scrooloose/nerdcommenter'
 Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'qpkorr/vim-bufkill'
+Plugin 'kshenoy/vim-signature'
+Plugin 'terryma/vim-expand-region'
 Plugin 'jremmen/vim-ripgrep'
+Plugin 'skywind3000/asyncrun.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
 Plugin 'KabbAmine/zeavim.vim'
-Plugin 'Valloric/YouCompleteMe'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-session'
-    
+Plugin 'lifepillar/vim-mucomplete'
+"Plugin 'Valloric/YouCompleteMe'
+
 call vundle#end()  
 
 filetype plugin indent on     
 
-"source $VIMRUNTIME/vimrc_example.vim
-"source $VIMRUNTIME/mswin.vim
+source $VIMRUNTIME/vimrc_example.vim
+source $VIMRUNTIME/mswin.vim
 behave mswin
 
 """""""""""""""""""""""""""""""""""""""""
 " => Editor customization
 """""""""""""""""""""""""""""""""""""""""
 
-syntax on                       " turn syntax highlighting on by default
 set autoindent                  " set auto-indenting on for programming
 set showmatch                   " automatically show matching brackets. works like it does in bbedit.
+set backspace=indent,eol,start  " make that backspace key work the way it should
 set nocompatible                " vi compatible is LAME
 set showmode                    " show the current mode
+syntax on                       " turn syntax highlighting on by default
 set noautochdir
 set number                      " Line numbers on
 set relativenumber              " Relative numbers on
@@ -71,6 +69,7 @@ set showmatch					" Show matching brackets when text indicator is over them
 set cursorline					" Highlight current line
 set novisualbell                " turn on the "visual bell" - which is much quieter than the "audio blink"
 set viminfo^=%					" Remember info about open buffers on close
+set mouse=a
 
 " Ignore compiled files
 set wildignore=*.o,*.obj,*.a,*.lib,*.dll,*~,*.pyc,*.zip,*.exe		
@@ -90,10 +89,13 @@ let g:mapleader = ","						" like <leader>w saves the current file
 
 nnoremap <leader>w :w!<cr>					" Fast saving
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>	" Switch CWD to the directory of the open buffer
+nnoremap <leader>j :NERDTreeToggle<cr>
+nnoremap <leader>h :NERDTreeFocus<cr>
 nnoremap <leader>k :Explore<cr>
-nnoremap <leader>r :%s/\<<C-r><C-w>\>//gc<left><left><left>
 inoremap <C-space> <C-n>
-noremap <silent> <leader><cr> :noh<cr>	    " Disable highlight when <leader><cr> is pressed
+
+" Find and replace
+nnoremap <leader>r :%s/\<<C-r><C-w>\>//gc<left><left><left>
 
 """"""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -102,6 +104,12 @@ noremap <silent> <leader><cr> :noh<cr>	    " Disable highlight when <leader><cr>
 set backup
 set wb
 set swapfile
+
+" tell vim where to put its backup files
+set backupdir=C:/Users/B0634624/Neovim/backup/
+
+" tell vim where to put swap files
+set dir=C:/Users/B0634624/Neovim/swap/
 
 """""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -128,17 +136,19 @@ inoremap <M-h> <left>
 inoremap <M-l> <right>
 
 " New lines on Enter key
-nmap <C-S-CR> Ojj
-nmap <S-CR> ojj
-set backspace=2 " make backspace work like most other programs
+nmap <S-Enter> ojj
+nmap <C-S-Enter> Ojj
 
 nnoremap ; :
-" Treat long lines as break lines (useful when moving around in them)
-noremap j gj						
+noremap j gj						" Treat long lines as break lines (useful when moving around in them)
 noremap k gk
+"noremap <space> /					" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
+"inoremap <c-space> ?
+"nnoremap * *N
 inoremap jj <Esc>
 inoremap <M-i> <Esc>
 inoremap <Esc> <Nop>
+noremap <silent> <leader><cr> :noh<cr>	" Disable highlight when <leader><cr> is pressed
 
 " Smart way to move between windows
 noremap <C-j> <C-W>j
@@ -147,7 +157,6 @@ noremap <C-h> <C-W>h
 noremap <C-l> <C-W>l
 
 " Close the current buffer
-noremap <leader>D :bdelete<cr>
 noremap <leader>d :BD<cr>
 
 noremap <leader>bw :BW<cr>
@@ -155,20 +164,19 @@ noremap <leader>bw :BW<cr>
 " Close all the buffers
 noremap <leader>ba :1,1000 bd!<cr>
 
+command Bd bp\|bd \#
+
 " Useful mappings for managing tabs
 noremap <leader>tn :tabnew<cr>
 noremap <leader>to :tabonly<cr>
 noremap <leader>te :tabedit %<cr>
 noremap <leader>tc :tabclose<cr>
 
-nnoremap <C-S-tab> :tabprevious<CR>
-nnoremap <C-tab>   :tabnext<CR>
+"nnoremap <C-S-tab> :tabprevious<CR>
+"nnoremap <C-tab>   :tabnext<CR>
 "nnoremap <C-t>     :tabnew<CR>
 "inoremap <C-t>     <Esc>:tabnew<CR>
 "inoremap <C-S-w>   <Esc>:tabclose<CR>
-
-" Terminal exit
-tnoremap jj <C-\><C-n>
 
 " Go to buffer by number
 nnoremap <Leader>l :ls<CR>
@@ -201,10 +209,15 @@ endtry
 
 noremap <F2> :buffers<CR>:buffer<Space>
 
+
+" Copy & paste
+nnoremap <Leader>y yiw
+nnoremap <Leader>p viw"0p
+
 """"""""""""""""""""""""""
 " => Status line
 """"""""""""""""""""""""""
-
+	
 set laststatus=2		" Always show the status line
 
 " Show EOL type and last modified timestamp, right after the filename
@@ -223,21 +236,22 @@ let g:airline_section_z = '%3p%% %#__accent_bold#%-2{g:airline_symbols.linenr}%#
 " => GUI
 """"""""""""""""""""""""""
 
-set background=dark
+let g:python_host_prog = 'C:/Python27/python.exe'
+let g:python3_host_prog = 'C:/Users/B0634624/AppData/Local/Programs/Python/Python36-32/python.exe'
+
+"set background=dark
 colorscheme night
 
-hi colorcolumn guibg=#353545 ctermbg=246
-hi SignColumn guibg=#353545 
-hi SignatureMarkText guibg=#353545 guifg=yellow
+hi colorcolumn guibg=#5e5e6e ctermbg=246
+hi SignColumn guibg=#5e5e6e guifg=yellow 
+hi SignatureMarkText guibg=#5e5e6e guifg=yellow 
 let &colorcolumn="100,".join(range(120,999),",")
 
-hi Pmenu gui=bold guibg=#404090 guifg=yellow
-hi CursorLine guibg=#404080
-hi Search guibg=blue 
-hi IncSearch guibg=blue  
-
-" Highlight all occurences for word on cursor
-autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+hi Normal guibg=#505060 ctermfg=grey ctermbg=darkblue
+hi Pmenu gui=bold guibg=#404070 guifg=yellow
+hi CursorLine guibg=#404090
+hi Search guibg=blue
+hi IncSearch guibg=blue
 
 nnoremap <left> :vertical resize +5<cr> 
 nnoremap <right> :vertical resize -5<cr>
@@ -252,9 +266,23 @@ augroup PreviewOnBottom
     autocmd InsertLeave * set splitbelow!
 augroup END
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""  Plugins
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""
+" => Terminal
+""""""""""""""""""""""""""
+
+tnoremap <Esc> <C-\><C-n>
+tnoremap <A-h> <C-\><C-N><C-w>h
+tnoremap <A-j> <C-\><C-N><C-w>j
+tnoremap <A-k> <C-\><C-N><C-w>k
+tnoremap <A-l> <C-\><C-N><C-w>l
+inoremap <A-h> <C-\><C-N><C-w>h
+inoremap <A-j> <C-\><C-N><C-w>j
+inoremap <A-k> <C-\><C-N><C-w>k
+inoremap <A-l> <C-\><C-N><C-w>l
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
 
 """"""""""""""""""""""""""
 " => Ctrl-P
@@ -264,11 +292,10 @@ let g:ctrlp_map = '<leader>p'
 let g:ctrlp_use_caching=1
 let g:ctrlp_working_path_mode=0
 let g:ctrlp_follow_symlinks=2
-
 nnoremap <leader>l :CtrlPBookmarkDir<CR>
 nnoremap <leader>P :CtrlPClearAllCaches<CR> :CtrlP<CR>
 
-nnoremap <leader><F2> :CtrlPMRUFiles<CR>
+nnoremap <leader><F2> :CtrlPMRUFiles<CR>>
 
 """"""""""""""""""""""""""
 " => GUndo
@@ -302,14 +329,22 @@ let g:cpp_member_variable_highlight = 1
 let g:cpp_class_decl_highlight = 1
 let g:cpp_concepts_highlight = 1
 
+autocmd! FileType c,cpp,java,php call CSyntaxAfter()
+
 """"""""""""""""""""""""""
-" => Ack
+" => Delmarks
+""""""""""""""""""""""""""
+
+command Delmarks  delmarks! | SignatureRefresh  
+
+""""""""""""""""""""""""""
+" => Rg
 """"""""""""""""""""""""""
 
 noremap <leader>a :Rg <cword><cr>
 noremap <leader>A :Rg 
 noremap <leader>c :cclose<cr>
-noremap <leader>o :copen<cr>
+noremap <leader>o :botright copen<cr>
 
 """"""""""""""""""""""""""
 " => IndentLine
@@ -321,94 +356,62 @@ let g:indentLine_color_gui = '#555555'
 " => NERDTree
 """"""""""""""""""""""""""
 
-noremap <leader>j :NERDTreeToggle<CR>
+nnoremap <leader>nt :NERDTreeToggle<cr>
+nnoremap <leader>nf :NERDTreeFind<cr>
 
-""""""""""""""""""""""""""
-" => YouCompleteMe
-""""""""""""""""""""""""""
-
-set completeopt-=preview " Not show scratch buffer with suggestions
-let g:ycm_confirm_extra_conf = 1
-
-""""""""""""""""""""""""""
-" => vim-session
+"""""""""""""""""""""""""
+" => Complete
 """"""""""""""""""""""""""
 
-let g:session_autosave = 'yes'
+set completeopt+=menuone
+set completeopt+=noselect
+set completeopt+=noinsert
+set shortmess+=c   " Shut off completion messages
+set belloff+=ctrlg " If Vim beeps during completion
+let g:mucomplete#enable_auto_at_startup = 1
+
+"""""""""""""""""""""""""
+" => ZeaVim
+""""""""""""""""""""""""""
+
+let g:zv_zeal_executable = 'zeal.exe'
 
 """"""""""""""""""""""""""
 " => Various
 """"""""""""""""""""""""""
+map @@x !%xmllint --format -<CR>
+map @@j !%python -m json.tool<CR>
 
- " C++ format using clang-format
-noremap <C-k> :silent pyfile /usr/share/clang/clang-format.py<CR>
-
-"   Switch between header an source file
-function! HeaderToggle() " bang for overwrite when saving vimrc
-let file_path = expand("%")
-let file_name = expand("%<")
-let extension = split(file_path, '\.')[-1] " '\.' is how you really split on dot
-let err_msg = "There is no file "
-
-if extension == "cpp"
-    let next_file = join([file_name, ".h"], "")
-
-    if filereadable(next_file)
-    :e %<.h
-    else
-        echo join([err_msg, next_file], "")
-    endif
-elseif extension == "h"
-    let next_file = join([file_name, ".cpp"], "")
-
-    if filereadable(next_file)
-        :e %<.cpp
-    else
-        echo join([err_msg, next_file], "")
-    endif
-endif
-endfunction
-
-noremap <leader>e :call HeaderToggle()<CR>
-
-""""""""""""""""""""""""""""""
-" => CodeCompletion - cscope
-""""""""""""""""""""""""""""""
-
-" autocmd VimEnter * cscope add cscope.out
-
-"   Code completion using cscope
-function! CodeCompletion()
-    :silent !find . -iname '*.c' -o -iname '*.cpp' -o -iname '*.h' -o -iname '*.hpp' > cscope.files
-    :silent !cscope -b -R
-    :cscope reset
-endfunction
-
-nnoremap <silent> <F12> :call CodeCompletion()<CR><CR>
-
-""""""""""""""""""""""""""""""
-" => Compilation
-""""""""""""""""""""""""""""""
-
-function! CompileAndRun ()
-    :!ninja -C /home/squall/RobotTales/Binaries/Linux/Out -j8
-    :cd /home/squall/RobotTales/Binaries/Linux
-    :!./RobotTales
-    :cd ../..
-endfunction
-
-nnoremap <silent> <F8> :call CompileAndRun()<CR>
-
-""""""""""""""""""""""""""""""
-" => Setting paths
-""""""""""""""""""""""""""""""
-
-noremap <C-'> :registers<CR>
-
-map @@x !%xmllint --format --recover -^M
+nnoremap <C-'> :registers<CR>
 
 set path+=*/**
 set path+=../**
 
-:cd /home/squall/RobotTales
+"let g:EclimCompletionMethod = 'omnifunc'
+"noremap <leader>s :JavaSearch<CR>
+
+au BufRead,BufNewFile *.aga setfiletype cpp
+au BufReadPost *.aga set syntax=cpp
+
+function! CodeCompletion()
+    :!c:/cygwin64/bin/find.exe -name *.java -o -name *.scala > cscope.files 
+    :!cscope -b -R    
+    :cscope reset 
+endfunction
+
+nnoremap <silent> <F12> :call CodeCompletion() <CR><CR>
+" autocmd VimEnter * cscope add cscope.out
+  
+set updatetime=10
+function! HighlightWordUnderCursor()
+    if getline(".")[col(".")-1] !~# '[[:punct:][:blank:]]' 
+        exec 'match' 'Search' '/\V\<'.expand('<cword>').'\>/' 
+    else 
+        match none 
+    endif
+endfunction
+
+autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
+
+:cd C:\Users\B0634624\Projects\EL\
 
