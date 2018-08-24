@@ -217,6 +217,7 @@ nnoremap <Leader>p viw"0p
 " Folding
 set foldmethod=marker
 set foldmarker={,}
+set foldlevelstart=20
 
 """"""""""""""""""""""""""
 " => Status line
