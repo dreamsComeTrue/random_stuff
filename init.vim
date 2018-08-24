@@ -214,6 +214,10 @@ noremap <F2> :buffers<CR>:buffer<Space>
 nnoremap <Leader>y yiw
 nnoremap <Leader>p viw"0p
 
+" Folding
+set foldmethod=marker
+set foldmarker={,}
+
 """"""""""""""""""""""""""
 " => Status line
 """"""""""""""""""""""""""
