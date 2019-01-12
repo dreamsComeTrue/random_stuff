@@ -1,0 +1,52 @@
+{
+    "window.zoomLevel": 1,
+    "files.associations": {
+        "*.script": "csharp",
+        "*.html": "html"
+    },
+    "cmake.saveBeforeBuild": true,
+    "cmake.buildBeforeRun": true,
+    "editor.mouseWheelZoom": true,
+    "files.autoSave": "afterDelay",
+    "editor.wordWrap": "on",
+    "editor.wordWrapColumn": 110,
+    "editor.autoClosingBrackets": "always",
+    "editor.autoClosingQuotes": "always",
+    "editor.smoothScrolling": true,
+    "editor.tabCompletion": "on",
+    "editor.cursorBlinking": "smooth",
+    "editor.cursorWidth": 2,
+    "editor.suggest.localityBonus": true,
+    "workbench.colorTheme": "Cobalt2",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.statusBar.feedback.visible": false,
+    "breadcrumbs.enabled": true,
+    "explorer.openEditors.visible": 0,
+    "search.smartCase": true,
+    "telemetry.enableCrashReporter": false,
+    "telemetry.enableTelemetry": false,
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.default.intelliSenseMode": "clang-x64",
+    "cmake.autoRestartBuild": true,
+    "cmake.generator": "ninja",
+    "cmake.parallelJobs": 8,
+    "material-icon-theme.activeIconPack": "angular_ngrx",
+    "explorer.confirmDragAndDrop": false,
+    "scalaLanguageServer.logLevel" : "DEBUG",
+    "scalaLanguageServer.heapSize" : "5768M",
+    "workbench.editor.enablePreview": false,
+    "files.exclude": {
+        "**/*.o": true
+    },
+    "zenMode.centerLayout": false,
+    "editor.trimAutoWhitespace": false,
+    "[scala]": {
+        "editor.tabSize": 2
+    },
+    "terminal.integrated.rendererType": "dom",
+    "git.postCommitCommand": "push",
+    "workbench.startupEditor": "newUntitledFile",
+    "workbench.sideBar.location": "left",
+    "workbench.activityBar.visible": true
+}
